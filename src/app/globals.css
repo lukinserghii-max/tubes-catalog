@@ -1,26 +1,15 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
+:root { --ink: #142226; --muted: #607074; --paper: #f4f1e9; --panel: #fffdf7; --line: #cfd2c9; --signal: #f15a2b; --steel: #1e6671; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; color: var(--ink); background: linear-gradient(90deg, rgba(20,34,38,.035) 1px, transparent 1px), linear-gradient(rgba(20,34,38,.035) 1px, transparent 1px), var(--paper); background-size: 28px 28px; font-family: var(--font-body), sans-serif; }
+button, input, select, textarea { font: inherit; }
+a { color: inherit; text-decoration: none; }
+button, a { -webkit-tap-highlight-color: transparent; }
+.display { font-family: var(--font-display), sans-serif; text-transform: uppercase; }
+.paper-shadow { box-shadow: 8px 8px 0 rgba(20,34,38,.13); }
+.focus-ring:focus-visible { outline: 3px solid var(--signal); outline-offset: 3px; }
+@keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+.rise { animation: rise .55s cubic-bezier(.2,.8,.2,1) both; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; } }

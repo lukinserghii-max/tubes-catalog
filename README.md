@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TUBES AI Store
 
-## Getting Started
+RFQ-магазин по украинскому каталогу `informatsiya-pro-produkt-v-elektronnomu-formati.pdf`.
 
-First, run the development server:
+## Что уже работает
+
+- 1 736 карточек, 430 категорий и 52 686 индексов из 1 737 страниц PDF;
+- 2 394 фотографии продукции, вырезанные по границам графических объектов PDF;
+- 3 491 таблица и 50 477 строк характеристик с активными индексами;
+- украинские описания из исходного каталога;
+- поиск, фильтрация по исходным разделам и страницы товаров;
+- сохранение позиции в локальный список запроса цены;
+- экспертный API с поиском по полному тексту каталога;
+- AI використовує лише сторінки каталогу TUBES International і показує посилання на PDF;
+- при наличии `OPENAI_API_KEY` ответы формирует OpenAI Responses API; без ключа работает безопасный резервный режим.
+
+## Запуск
 
 ```bash
+npm install
+copy .env.example .env.local
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Відкрийте `http://localhost:3000`. Для перевірки на тому самому порту, що використовується в тестах: `npm run dev -- -p 3210`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Перевірка
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Після запуску сервера на `http://localhost:3210`:
 
-## Learn More
+```bash
+npm run test:integrity
+npm run test:catalog
+npm run test:search
+npm run test:assistant
+npm run test:security
+```
 
-To learn more about Next.js, take a look at the following resources:
+`npm run test:e2e` додатково потребує встановлений пакет Playwright або шлях до нього через `NODE_PATH`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Повторный импорт каталога
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+python -m pip install pymupdf pillow
+python scripts/import_catalog.py "D:\путь\к\informatsiya-pro-produkt-v-elektronnomu-formati.pdf"
+python scripts/render_catalog_images.py "D:\путь\к\informatsiya-pro-produkt-v-elektronnomu-formati.pdf" --force
+```
 
-## Deploy on Vercel
+Импорт обновляет `src/data/catalog-index.json` и `src/data/catalog-content.json`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Переменные окружения
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `OPENAI_API_KEY` — секретный ключ OpenAI, хранить только на сервере;
+- `OPENAI_MODEL` — модель Responses API, по умолчанию `gpt-5.4-mini`.
+
+## Ограничения источника
+
+Каталог не містить актуальних цін або складських залишків. Система показує кандидатів, сторінки-джерела та параметри, яких бракує, але вимагає підтвердження інженером за актуальною документацією виробника. Для хімічної сумісності використовуються лише прямо наведені в каталозі дані, зокрема таблиця на сторінці 157.
