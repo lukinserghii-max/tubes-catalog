@@ -70,6 +70,9 @@ try {
   const assistantText = await page.getByRole("dialog").innerText();
   ensure(!/wikipedia/i.test(assistantText), "AI-відповідь посилається на Wikipedia");
   ensure(/стор\. 157|сторінка 157/i.test(assistantText), "Для кислоти не додано таблицю стійкості зі сторінки 157");
+  ensure(/ORLANDO®? EPR/i.test(assistantText), "Прямий приклад каталогу не рекомендує ORLANDO EPR");
+  ensure(assistantText.includes("IV-ORLANDO-025"), "Відповідь не містить індекс для діаметра 25 мм");
+  ensure(/AI-аналіз каталогу|Локальний пошук без AI-моделі/i.test(assistantText), "Не показано режим роботи помічника");
   await page.getByRole("button", { name: "Закрити" }).click();
 
   await page.setViewportSize({ width: 390, height: 844 });

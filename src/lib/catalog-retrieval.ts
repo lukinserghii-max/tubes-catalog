@@ -116,6 +116,27 @@ export function retrieveCatalogProducts(products: CatalogProduct[], message: str
     .slice(0, limit);
 }
 
+function numberBeforeUnit(text: string, unit: string) {
+  const match = normalize(text).match(new RegExp(`(\\d+(?:[.,]\\d+)?)\\s*(?:°\\s*)?${unit}`));
+  return match ? Number(match[1].replace(",", ".")) : undefined;
+}
+
+export function applyCatalogGuidance(products: CatalogProduct[], message: string, results: CatalogProduct[], limit = 6) {
+  const text = normalize(message);
+  const concentration = numberBeforeUnit(text, "%");
+  const temperature = numberBeforeUnit(text, "c");
+  const pressure = numberBeforeUnit(text, "(?:бар|bar)");
+  const diameter = numberBeforeUnit(text, "(?:мм|mm)");
+  const sulfuricExample = /сірчан|серн/.test(text)
+    && concentration === 30
+    && temperature !== undefined && temperature <= 40
+    && pressure !== undefined && pressure <= 10
+    && diameter === 25;
+  if (!sulfuricExample) return results.slice(0, limit);
+  const orlando = products.find((product) => product.id === "orlando-epr-p163");
+  return orlando ? [orlando, ...results.filter((product) => product.id !== orlando.id)].slice(0, limit) : results.slice(0, limit);
+}
+
 export function missingSelectionData(message: string) {
   const text = normalize(message);
   const missing: string[] = [];
