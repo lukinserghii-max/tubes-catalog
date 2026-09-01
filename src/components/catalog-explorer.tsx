@@ -221,129 +221,125 @@ export function CatalogExplorer({ catalog }: { catalog: Catalog }) {
             />
           </div>
         </div>
-        <div
-          className="mb-4 flex gap-2 overflow-x-auto pb-3"
-          aria-label="Розділи каталогу"
-        >
-          <button
-            onClick={() => {
-              setSection("all");
-              setCategory("all");
-              setSubcategory("all");
-              setVisible(PAGE_SIZE);
-            }}
-            className={`focus-ring shrink-0 border-2 border-[var(--ink)] px-4 py-2 text-sm font-bold ${section === "all" ? "bg-[var(--ink)] text-white" : "bg-[var(--panel)]"}`}
-          >
-            Все · {catalog.meta.products}
-          </button>
-          {catalog.sections.map((item) => (
-            <button
-              key={item.slug}
-              onClick={() => {
-                setSection(item.name);
-                setCategory("all");
-                setSubcategory("all");
-                setVisible(PAGE_SIZE);
-              }}
-              className={`focus-ring shrink-0 border-2 border-[var(--ink)] px-4 py-2 text-sm font-bold ${section === item.name ? "bg-[var(--ink)] text-white" : "bg-[var(--panel)] hover:bg-[#e5e0d5]"}`}
-            >
-              {item.name} · {item.count}
-            </button>
-          ))}
-        </div>
-        {section !== "all" && (
-          <div className="mb-7 border-2 border-[var(--ink)] bg-[var(--panel)] p-4 shadow-[4px_4px_0_rgba(20,34,38,.12)]">
-            <div className="mb-2 flex items-center gap-3">
-              <b className="display text-xl">Підрозділи</b>
-              <span className="text-xs text-[var(--muted)]">{section}</span>
+        <div className="grid items-start gap-7 lg:grid-cols-[310px_minmax(0,1fr)]">
+          <aside className="border-2 border-[var(--ink)] bg-white lg:sticky lg:top-4 lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto">
+            <div className="border-b-2 border-[var(--ink)] bg-[var(--ink)] px-4 py-3 text-white">
+              <b className="display text-2xl">Каталог</b>
+              <p className="mt-0.5 text-xs text-white/60">Оберіть розділ продукції</p>
             </div>
-            <div className="flex gap-2 overflow-x-auto pb-2">
+            <nav className="p-2" aria-label="Розділи каталогу">
               <button
                 onClick={() => {
+                  setSection("all");
                   setCategory("all");
                   setSubcategory("all");
                   setVisible(PAGE_SIZE);
                 }}
-                className={`focus-ring shrink-0 border px-3 py-2 text-sm font-semibold ${category === "all" ? "border-[var(--ink)] bg-[var(--ink)] text-white" : "border-[var(--line)] bg-white hover:border-[var(--signal)]"}`}
+                className={`focus-ring mb-1 flex w-full items-center justify-between px-3 py-3 text-left text-sm font-bold ${section === "all" ? "bg-[var(--signal)] text-white" : "hover:bg-[#f1f1ef]"}`}
               >
-                Усі ·{" "}
-                {catalog.sections.find((item) => item.name === section)
-                  ?.count || 0}
+                <span>УСІ ТОВАРИ</span><span>{catalog.meta.products}</span>
               </button>
-              {categories.map((item) => (
-                <button
-                  key={item.name}
-                  onClick={() => {
-                    setCategory(item.name);
-                    setSubcategory("all");
-                    setVisible(PAGE_SIZE);
-                  }}
-                  className={`focus-ring shrink-0 border px-3 py-2 text-sm font-semibold ${category === item.name ? "border-[var(--signal)] bg-[var(--signal)] text-white" : "border-[var(--line)] bg-white hover:border-[var(--signal)]"}`}
-                >
-                  {item.name} · {item.count}
-                </button>
-              ))}
-            </div>
-            {category !== "all" && subcategories.length > 0 && (
-              <>
-                <div className="mb-2 mt-3 border-t border-[var(--line)] pt-3 text-xs font-bold uppercase tracking-[.16em] text-[var(--muted)]">
-                  Категорії
-                </div>
-                <div className="flex gap-2 overflow-x-auto pb-1">
-                  <button
-                    onClick={() => {
-                      setSubcategory("all");
-                      setVisible(PAGE_SIZE);
-                    }}
-                    className={`focus-ring shrink-0 border px-3 py-1.5 text-sm ${subcategory === "all" ? "border-[var(--ink)] bg-[#dbe7e5] font-bold" : "border-[var(--line)] bg-white"}`}
-                  >
-                    Усі
-                  </button>
-                  {subcategories.map((item) => (
+              {catalog.sections.map((item) => {
+                const open = section === item.name;
+                return (
+                  <div key={item.slug} className="border-t border-[var(--line)]">
                     <button
-                      key={item.name}
+                      aria-label={`${item.name} · ${item.count}`}
+                      aria-expanded={open}
                       onClick={() => {
-                        setSubcategory(item.name);
+                        setSection(open ? "all" : item.name);
+                        setCategory("all");
+                        setSubcategory("all");
                         setVisible(PAGE_SIZE);
                       }}
-                      className={`focus-ring shrink-0 border px-3 py-1.5 text-sm ${subcategory === item.name ? "border-[var(--ink)] bg-[#dbe7e5] font-bold" : "border-[var(--line)] bg-white hover:border-[var(--signal)]"}`}
+                      className={`focus-ring flex w-full items-start justify-between gap-3 px-3 py-3 text-left text-xs font-bold leading-snug ${open ? "bg-[#f3f3f1] text-[var(--signal)]" : "hover:text-[var(--signal)]"}`}
                     >
-                      {item.name} · {item.count}
+                      <span>{item.name}</span>
+                      <span className="flex shrink-0 items-center gap-2"><span className="text-[var(--muted)]">{item.count}</span><span aria-hidden="true" className="text-lg leading-none">{open ? "−" : "+"}</span></span>
                     </button>
-                  ))}
-                </div>
-              </>
+                    {open && (
+                      <div className="menu-drop border-l-4 border-[var(--signal)] bg-[#fafaf8] px-2 pb-2">
+                        <div className="px-2 pb-1 pt-2 text-[10px] font-bold uppercase tracking-[.16em] text-[var(--muted)]">Підрозділи</div>
+                        <button
+                          onClick={() => {
+                            setCategory("all");
+                            setSubcategory("all");
+                            setVisible(PAGE_SIZE);
+                          }}
+                          className={`focus-ring flex w-full justify-between px-2 py-2 text-left text-xs ${category === "all" ? "bg-[var(--ink)] font-bold text-white" : "hover:bg-white"}`}
+                        >
+                          <span>Усі в розділі</span><span>{item.count}</span>
+                        </button>
+                        {categories.map((categoryItem) => {
+                          const categoryOpen = category === categoryItem.name;
+                          return (
+                            <div key={categoryItem.name}>
+                              <button
+                                aria-label={`${categoryItem.name} · ${categoryItem.count}`}
+                                aria-expanded={categoryOpen}
+                                onClick={() => {
+                                  setCategory(categoryOpen ? "all" : categoryItem.name);
+                                  setSubcategory("all");
+                                  setVisible(PAGE_SIZE);
+                                }}
+                                className={`focus-ring flex w-full items-start justify-between gap-2 px-2 py-2 text-left text-xs leading-snug ${categoryOpen ? "bg-[var(--signal)] font-bold text-white" : "hover:bg-white"}`}
+                              >
+                                <span>{categoryItem.name}</span><span className="shrink-0">{categoryItem.count}{categoryOpen && subcategories.length ? " −" : ""}</span>
+                              </button>
+                              {categoryOpen && subcategories.length > 0 && (
+                                <div className="menu-drop ml-3 border-l border-[var(--line)] py-1 pl-2">
+                                  <button
+                                    onClick={() => { setSubcategory("all"); setVisible(PAGE_SIZE); }}
+                                    className={`focus-ring w-full px-2 py-1.5 text-left text-xs ${subcategory === "all" ? "font-bold text-[var(--signal)]" : "hover:text-[var(--signal)]"}`}
+                                  >Усі категорії</button>
+                                  {subcategories.map((subcategoryItem) => (
+                                    <button
+                                      key={subcategoryItem.name}
+                                      onClick={() => { setSubcategory(subcategoryItem.name); setVisible(PAGE_SIZE); }}
+                                      className={`focus-ring flex w-full justify-between gap-2 px-2 py-1.5 text-left text-[11px] leading-snug ${subcategory === subcategoryItem.name ? "bg-[#ececea] font-bold" : "hover:bg-white"}`}
+                                    >
+                                      <span>{subcategoryItem.name}</span><span>{subcategoryItem.count}</span>
+                                    </button>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </nav>
+          </aside>
+          <div className="min-w-0">
+            <div className="mb-5 flex items-center justify-between border-b border-[var(--line)] pb-3 text-sm text-[var(--muted)]">
+              <span>Знайдено: <b className="text-[var(--ink)]">{filtered.length}</b></span>
+              <span>Картки перекладено українською</span>
+            </div>
+            {filtered.length ? (
+              <div className="grid gap-5 md:grid-cols-2 2xl:grid-cols-3">
+                {filtered.slice(0, visible).map((product, index) => (
+                  <ProductCard key={product.id} product={product} index={index} />
+                ))}
+              </div>
+            ) : (
+              <div className="border-2 border-dashed border-[var(--muted)] bg-[var(--panel)] p-12 text-center">
+                <b className="display text-3xl">Нічого не знайдено</b>
+                <p className="mt-2 text-[var(--muted)]">Змініть запит або оберіть інший розділ.</p>
+              </div>
+            )}
+            {visible < filtered.length && (
+              <button
+                onClick={() => setVisible((value) => value + PAGE_SIZE)}
+                className="focus-ring mx-auto mt-10 flex items-center gap-2 border-2 border-[var(--ink)] bg-[var(--panel)] px-7 py-3 font-bold shadow-[5px_5px_0_var(--ink)] hover:translate-x-1 hover:translate-y-1 hover:shadow-none"
+              >
+                Показати ще <Icon name="arrow" />
+              </button>
             )}
           </div>
-        )}
-        <div className="mb-5 flex items-center justify-between border-b border-[var(--line)] pb-3 text-sm text-[var(--muted)]">
-          <span>
-            Знайдено: <b className="text-[var(--ink)]">{filtered.length}</b>
-          </span>
-          <span>Картки перекладено українською</span>
         </div>
-        {filtered.length ? (
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {filtered.slice(0, visible).map((product, index) => (
-              <ProductCard key={product.id} product={product} index={index} />
-            ))}
-          </div>
-        ) : (
-          <div className="border-2 border-dashed border-[var(--muted)] bg-[var(--panel)] p-12 text-center">
-            <b className="display text-3xl">Нічого не знайдено</b>
-            <p className="mt-2 text-[var(--muted)]">
-              Змініть запит або оберіть інший розділ.
-            </p>
-          </div>
-        )}
-        {visible < filtered.length && (
-          <button
-            onClick={() => setVisible((value) => value + PAGE_SIZE)}
-            className="focus-ring mx-auto mt-10 flex items-center gap-2 border-2 border-[var(--ink)] bg-[var(--panel)] px-7 py-3 font-bold shadow-[5px_5px_0_var(--ink)] hover:translate-x-1 hover:translate-y-1 hover:shadow-none"
-          >
-            Показати ще <Icon name="arrow" />
-          </button>
-        )}
       </section>
 
       <section className="border-y-2 border-[var(--ink)] bg-[var(--signal)] text-white">

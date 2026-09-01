@@ -50,6 +50,11 @@ try {
   const categoryCount = catalog.products.filter((product) => product.section === drums.name && product.categoryPath[1] === drumProduct.categoryPath[1]).length;
   await page.getByRole("button", { name: `${drumProduct.categoryPath[1]} · ${categoryCount}`, exact: true }).click();
   ensure(await page.locator('a[href^="/product/"]').count() > 0, "Підрозділ барабанів порожній після фільтрації");
+  const sidebar = page.locator("#catalog aside");
+  await page.evaluate(() => window.scrollTo(0, 1100));
+  await page.waitForTimeout(250);
+  const stickyBox = await sidebar.boundingBox();
+  ensure(stickyBox && stickyBox.y >= 0 && stickyBox.y <= 24, `Бічне меню не зафіксоване при прокрутці: y=${stickyBox?.y}`);
 
   await page.goto(`${base}/product/cristallo-extra-p2`, { waitUntil: "networkidle" });
   await page.getByRole("heading", { name: "CRISTALLO EXTRA", level: 1 }).waitFor();
