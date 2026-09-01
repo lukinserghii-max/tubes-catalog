@@ -144,34 +144,28 @@ export function CatalogExplorer({ catalog }: { catalog: Catalog }) {
 
   return (
     <main>
-      <header className="border-b-2 border-[var(--ink)] bg-[var(--panel)]">
-        <div className="mx-auto flex max-w-[1500px] items-center justify-between px-5 py-2.5 lg:px-10">
+      <header className="border-t-4 border-[var(--signal)] bg-white shadow-[0_1px_0_rgba(19,23,24,.18)]">
+        <div className="mx-auto flex max-w-[1500px] items-center justify-between px-5 py-3 lg:px-10">
           <Link
             href="/"
-            className="focus-ring flex items-center gap-2.5"
-            aria-label="TUBES AI, главная"
+            className="focus-ring flex shrink-0 items-center"
+            aria-label="TUBES International, головна"
           >
-            <span className="grid h-9 w-9 place-items-center bg-[var(--signal)] text-lg font-black text-white">
-              T
-            </span>
-            <span>
-              <b className="display block text-xl leading-none tracking-[.08em]">
-                Tubes AI
-              </b>
-              <small className="text-[9px] uppercase tracking-[.22em] text-[var(--muted)]">
-                industrial intelligence
-              </small>
-            </span>
+            <img
+              src="https://www.tubes-international.com/wp-content/uploads/2024/02/logo-tubes-international.svg"
+              alt="TUBES International"
+              className="h-12 w-auto sm:h-14"
+            />
           </Link>
-          <div className="hidden items-center gap-8 text-sm font-semibold lg:flex">
+          <div className="hidden items-center gap-10 text-sm font-bold uppercase tracking-[.08em] lg:flex">
             <a
-              className="focus-ring hover:text-[var(--signal)]"
+              className="focus-ring border-b-2 border-[var(--signal)] py-2"
               href="#catalog"
             >
               Каталог
             </a>
-            <span className="text-[var(--muted)]">
-              Джерело: TUBES International UA
+            <span className="text-xs text-[var(--muted)]">
+              Шланги та фітинги для промисловості
             </span>
           </div>
           <div className="flex items-center gap-2">
@@ -179,13 +173,13 @@ export function CatalogExplorer({ catalog }: { catalog: Catalog }) {
               href="/catalog.pdf"
               target="_blank"
               rel="noreferrer"
-              className="focus-ring border-2 border-[var(--ink)] bg-[var(--panel)] px-3 py-2 text-sm font-bold hover:bg-[#e5e0d5]"
+              className="focus-ring border-2 border-[var(--ink)] bg-white px-3 py-2 text-sm font-bold hover:border-[var(--signal)] hover:text-[var(--signal)]"
             >
               PDF ↗
             </a>
             <button
               onClick={() => setAssistantOpen(true)}
-              className="focus-ring flex items-center gap-2 border-2 border-[var(--ink)] bg-[var(--ink)] px-4 py-2 font-bold text-white hover:bg-[var(--steel)]"
+              className="focus-ring flex items-center gap-2 border-2 border-[var(--signal)] bg-[var(--signal)] px-4 py-2 font-bold text-white hover:bg-[var(--ink)] hover:border-[var(--ink)]"
             >
               <Icon name="spark" />
               <span className="hidden sm:inline">Запитати експерта</span>
@@ -195,54 +189,11 @@ export function CatalogExplorer({ catalog }: { catalog: Catalog }) {
         </div>
       </header>
 
-      <section className="relative overflow-hidden border-b-2 border-[var(--ink)] bg-[var(--steel)] text-white">
-        <div className="absolute -right-24 -top-36 h-[420px] w-[420px] rounded-full border-[70px] border-white/10" />
-        <div className="mx-auto grid max-w-[1500px] gap-6 px-5 py-8 lg:grid-cols-[1.25fr_.75fr] lg:px-10 lg:py-10">
-          <div className="rise relative z-10">
-            <p className="mb-3 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[.24em] text-[#bfe8e8]">
-              <span className="h-px w-10 bg-current" />
-              Каталог промислового обладнання
-            </p>
-            <h1 className="display max-w-4xl text-4xl font-bold leading-[.9] tracking-[-.02em] sm:text-5xl lg:text-[64px]">
-              Точний підбір починається з даних
-            </h1>
-            <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/80">
-              Шланги, арматура, високий тиск і пневматика — структуру
-              оригінального каталогу збережено. AI‑експерт допомагає знайти
-              позицію та підготувати питання для інженера.
-            </p>
-          </div>
-          <div
-            className="rise relative z-10 grid grid-cols-2 self-end border-2 border-white/50 bg-black/10 backdrop-blur-sm"
-            style={{ animationDelay: "120ms" }}
-          >
-            {[
-              ["Позицій", catalog.meta.products],
-              ["Розділів", catalog.meta.categories],
-              ["Сторінок", catalog.meta.pages],
-              ["Рік джерела", catalog.meta.catalogYear],
-            ].map(([label, value]) => (
-              <div
-                key={label}
-                className="border-b border-r border-white/25 p-4"
-              >
-                <strong className="display block text-3xl text-[#ffb093]">
-                  {value}
-                </strong>
-                <span className="text-[10px] uppercase tracking-[.16em] text-white/65">
-                  {label}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section
         id="catalog"
-        className="mx-auto max-w-[1500px] px-5 py-10 lg:px-10 lg:py-16"
+        className="mx-auto max-w-[1500px] px-5 py-8 lg:px-10 lg:py-10"
       >
-        <div className="mb-9 grid gap-5 lg:grid-cols-[1fr_auto] lg:items-end">
+        <div className="mb-7 grid gap-5 lg:grid-cols-[1fr_auto] lg:items-end">
           <div>
             <p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--signal)]">
               Оригінальна ієрархія PDF

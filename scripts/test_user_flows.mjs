@@ -26,7 +26,7 @@ page.on("requestfailed", (request) => {
 const ensure = (condition, message) => { if (!condition) throw new Error(message); };
 try {
   await page.goto(base, { waitUntil: "networkidle" });
-  await page.getByRole("heading", { name: "Точний підбір починається з даних" }).waitFor();
+  await page.getByRole("heading", { name: "Знайти обладнання" }).waitFor();
   ensure((await page.locator("body").innerText()).includes("1736"), "На головній не показано 1736 позицій");
   const searchBox = await page.locator("#catalog-search").boundingBox();
   ensure(searchBox && searchBox.y + searchBox.height <= 768, "Пошук каталогу не видно на першому екрані 1440×768");

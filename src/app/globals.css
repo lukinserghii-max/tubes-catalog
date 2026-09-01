@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-:root { --ink: #142226; --muted: #607074; --paper: #f4f1e9; --panel: #fffdf7; --line: #cfd2c9; --signal: #f15a2b; --steel: #1e6671; }
+:root { --ink: #131718; --muted: #666b6d; --paper: #f5f5f3; --panel: #ffffff; --line: #d5d6d4; --signal: #ed2127; --steel: #303536; }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body { margin: 0; color: var(--ink); background: linear-gradient(90deg, rgba(20,34,38,.035) 1px, transparent 1px), linear-gradient(rgba(20,34,38,.035) 1px, transparent 1px), var(--paper); background-size: 28px 28px; font-family: var(--font-body), sans-serif; }
