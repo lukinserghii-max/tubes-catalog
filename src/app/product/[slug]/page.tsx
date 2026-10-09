@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import products from "@/data/catalog-content.json";
 import { QuoteButton } from "@/components/quote-button";
 import { VariantTable } from "@/components/variant-table";
+import { getAiImage } from "@/lib/ai-images";
 
 type Product = (typeof products)[number] & { sectionUk?: string; categoryPathUk?: string[]; excerptUk?: string; catalogTextUk?: string; image: string; images?: string[]; tables?: string[][][]; variants: { index: string; label: string; available: boolean }[] };
 
@@ -21,6 +22,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const { slug } = await params;
   const product = findProduct(slug);
   if (!product) notFound();
+  const aiImage = getAiImage(product.slug);
   const previewImage = product.image || (products as Product[]).filter((item) => item.image && item.categoryPath.join("\0") === product.categoryPath.join("\0")).sort((a, b) => Math.abs(a.page - product.page) - Math.abs(b.page - product.page))[0]?.image || "";
   return <main data-product-id={product.id} className="min-h-screen">
     <header className="border-t-4 border-[var(--signal)] bg-white shadow-[0_1px_0_rgba(19,23,24,.18)]"><div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-5 py-3"><Link href="/" className="focus-ring flex items-center"><img src="https://www.tubes-international.com/wp-content/uploads/2024/02/logo-tubes-international.svg" alt="TUBES International" className="h-12 w-auto" /></Link><div className="flex items-center gap-3"><a href={`/catalog.pdf#page=${product.page}`} target="_blank" rel="noreferrer" className="focus-ring border-2 border-[var(--ink)] px-3 py-2 text-sm font-bold hover:border-[var(--signal)] hover:text-[var(--signal)]">PDF · стор. {product.page} ↗</a><Link href="/#catalog" className="focus-ring border-b-2 border-[var(--signal)] font-bold">← Каталог</Link></div></div></header>
@@ -30,7 +32,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         <article className="min-w-0">
           <div className="mb-5 flex flex-wrap items-center gap-3"><span className="border border-[var(--ink)] bg-[#dbe7e5] px-3 py-1 text-xs font-bold uppercase tracking-[.12em]">{product.sectionUk || product.section}</span><span className="display text-[var(--muted)]">Джерело: PDF, стор. {product.page}</span></div>
           <h1 className="display text-5xl font-bold leading-[.92] sm:text-7xl">{product.name}</h1>
-          {(product.images?.length || product.image) ? <div className="mt-7 grid gap-4 border-2 border-[var(--ink)] bg-white p-4 sm:grid-cols-2">{(product.images?.length ? product.images : [product.image]).map((image, index) => <img key={image} src={image} alt={`Фото продукції ${product.name}${index ? `, ${index + 1}` : ""}`} className="max-h-[360px] w-full object-contain"/>)}</div> : <div className="mt-7 grid h-48 place-items-center border-2 border-dashed border-[var(--muted)] bg-white text-[var(--muted)]">Фото продукції у PDF відсутнє</div>}
+          {aiImage && <figure className="mt-7 border-2 border-[var(--ink)] bg-white p-4"><img src={aiImage.src} alt={`AI-ілюстрація ${product.name}`} className="mx-auto max-h-[360px] w-full object-contain"/><figcaption className="mt-3 text-xs text-[var(--muted)]">Ілюстрацію згенеровано AI{aiImage.mode === "edit" ? " на основі фото з каталогу" : ""}. Це не фото продукції — перевіряйте вигляд за PDF, стор. {product.page}.</figcaption></figure>}
+          {(product.images?.length || product.image) ? <div className="mt-7 grid gap-4 border-2 border-[var(--ink)] bg-white p-4 sm:grid-cols-2">{(product.images?.length ? product.images : [product.image]).map((image, index) => <img key={image} src={image} alt={`Фото продукції ${product.name}${index ? `, ${index + 1}` : ""}`} className="max-h-[360px] w-full object-contain"/>)}</div> : aiImage ? null : <div className="mt-7 grid h-48 place-items-center border-2 border-dashed border-[var(--muted)] bg-white text-[var(--muted)]">Фото продукції у PDF відсутнє</div>}
           <p className="mt-6 border-l-4 border-[var(--signal)] pl-5 text-lg leading-relaxed text-[var(--muted)]">{product.excerptUk || product.excerpt}</p>
           <VariantTable product={{ id: product.id, name: product.name, page: product.page, previewImage: product.section.toLocaleUpperCase("uk").includes("ШЛАНГ") ? "" : previewImage, variants: product.variants, tables: product.tables || [] }} />
           <section className="mt-10 border-2 border-[var(--ink)] bg-[var(--panel)] p-5 shadow-[7px_7px_0_rgba(20,34,38,.13)] sm:p-8"><div className="mb-5 flex items-center justify-between border-b border-[var(--line)] pb-4"><h2 className="display text-3xl font-bold">Дані каталогу</h2><span className="text-sm text-[var(--muted)]">Оригінал українською</span></div><p className="whitespace-pre-wrap leading-7">{product.catalogTextUk || product.catalogText}</p></section>

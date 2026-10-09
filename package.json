@@ -12,7 +12,8 @@
     "test:search": "node --experimental-strip-types scripts/test_catalog_search.mjs",
     "test:assistant": "node --experimental-strip-types scripts/test_catalog_assistant.mjs",
     "test:e2e": "node scripts/test_user_flows.mjs",
-    "test:security": "node scripts/test_api_security.mjs"
+    "test:security": "node scripts/test_api_security.mjs",
+    "images:generate": "node scripts/generate_product_images.mjs"
   },
   "dependencies": {
     "next": "^16.3.3",
