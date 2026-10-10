@@ -14,6 +14,7 @@ type Product = {
   excerptUk?: string;
   categoryPath: string[];
   image: string;
+  aiImage?: boolean;
   variants: { index: string; label: string; available: boolean }[];
 };
 type Catalog = {
@@ -397,11 +398,16 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
             PDF / {product.page}
           </span>
         </div>
-        <div className="mb-5 grid h-40 place-items-center overflow-hidden border border-[var(--line)] bg-white">
+        <div className="relative mb-5 grid h-40 place-items-center overflow-hidden border border-[var(--line)] bg-white">
+          {product.aiImage && (
+            <span className="absolute right-1 top-1 z-10 bg-[var(--ink)] px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white" title="Ілюстрацію згенеровано AI, це не фото з каталогу">
+              AI
+            </span>
+          )}
           {product.image ? (
             <img
               src={product.image}
-              alt={`Фото продукції: ${product.name}`}
+              alt={product.aiImage ? `AI-ілюстрація: ${product.name}` : `Фото продукції: ${product.name}`}
               loading="lazy"
               className="h-full w-full object-contain p-2 transition-transform duration-500 group-hover:scale-[1.03]"
             />
